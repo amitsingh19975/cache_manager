@@ -9,8 +9,8 @@
 #   define BOOST_NUMERIC_UBLAS_ARM
 #endif
 
-#if BOOST_ARCH_X86_64
-#   define BOOST_NUMERIC_UBLAS_x86_64
+#if BOOST_ARCH_X86
+#   define BOOST_NUMERIC_UBLAS_x86
 #endif
 
 #if BOOST_OS_LINUX
@@ -48,7 +48,7 @@ namespace boost::numeric::ublas::detail{
 
 #ifdef __ARM_FEATURE_SVE_BITS
     inline static constexpr std::size_t simd_width = __ARM_FEATURE_SVE_BITS;
-#elif !BOOST_ARCH_X86_64
+#elif !defined(BOOST_NUMERIC_UBLAS_x86)
     inline static constexpr std::size_t simd_width = 128ul;
 #endif
 
@@ -61,7 +61,7 @@ namespace boost::numeric::ublas::detail{
 
 #ifndef BOOST_NUMERIC_UBLAS_CACHE_L1
 
-#   if defined(BOOST_NUMERIC_UBLAS_x86_64)
+#   if defined(BOOST_NUMERIC_UBLAS_x86)
         inline static constexpr std::array default_l1_cache = { 64ul, 8ul, 64ul };
 #   else
         inline static constexpr std::array default_l1_cache = { 128ul, 4ul, 128ul };
@@ -74,7 +74,7 @@ namespace boost::numeric::ublas::detail{
 
 #ifndef BOOST_NUMERIC_UBLAS_CACHE_L2
 
-#   if defined(BOOST_NUMERIC_UBLAS_x86_64)
+#   if defined(BOOST_NUMERIC_UBLAS_x86)
         inline static constexpr std::array default_l2_cache = { 64ul, 4ul, 1024ul };
 #   else
         inline static constexpr std::array default_l2_cache = { 128ul, 16ul, 2048ul };

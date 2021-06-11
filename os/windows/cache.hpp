@@ -24,13 +24,13 @@ namespace boost::numeric::ublas{
             for(auto const& p : buff){
                 if(p.Relationship == RelationCache){
                     auto const& c = p.Cache;
-                    auto pos = static_cast<std::size_t>(c.Level) - 1u;
+                    auto pos = static_cast<IntType>(c.Level) - 1u;
                     if(pos > 2ul) continue;
 
                     if( ( pos == 0u && c.Type == CacheData ) || pos > 0u){
-                        auto const associativity = static_cast<std::size_t>(c.Associativity);
-                        auto const line_size = static_cast<std::size_t>(c.LineSize);
-                        auto const size = static_cast<std::size_t>(c.Size);
+                        auto const associativity = static_cast<IntType>(c.Associativity);
+                        auto const line_size = static_cast<IntType>(c.LineSize);
+                        auto const size = static_cast<IntType>(c.Size);
                         auto const sets = size / ( associativity * line_size );
                         res[pos] = cache_info{line_size, associativity, sets};
                     }
@@ -106,7 +106,7 @@ namespace boost::numeric::ublas{
         static base_type const m_data;
     };
 
-    cache_manager::base_type const cache_manager::m_data = detail::get_cache_info();
+    cache_manager::base_type const cache_manager::m_data = detail::get_cache_info<std::size_t>();
 
 } // namespace boost::numeric::ublas
 

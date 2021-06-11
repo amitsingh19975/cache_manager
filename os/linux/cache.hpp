@@ -60,7 +60,7 @@ namespace boost::numeric::ublas{
         constexpr auto get_level_three() noexcept 
             -> std::optional<cache_info>
         {
-            #if defined(BOOST_NUMERIC_UBLAS_CACHE_L3) || defined(BOOST_NUMERIC_UBLAS_x86_64)
+            #if defined(BOOST_NUMERIC_UBLAS_CACHE_L3) || defined(BOOST_NUMERIC_UBLAS_x86)
                 cache_info res{};
 
                 res.line_size = sysconf_helper<std::size_t>(_SC_LEVEL3_CACHE_LINESIZE).value_or(default_l3_cache[0]);
