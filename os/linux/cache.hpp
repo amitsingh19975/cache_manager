@@ -4,6 +4,7 @@
 #include "../config.hpp"
 #include <optional>
 #include <unistd.h>
+#include <array>
 
 namespace boost::numeric::ublas{
 
