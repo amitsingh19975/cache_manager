@@ -82,14 +82,14 @@ namespace boost::numeric::ublas::detail{
 
 #else
     inline static constexpr std::array default_l2_cache = { BOOST_NUMERIC_UBLAS_CACHE_L2 };
-    static_assert(default_l2_cache.size() == 3ul, "invalid BOOST_NUMERIC_UBLAS_CACHE_L1 arity");
+    static_assert(default_l2_cache.size() == 3ul, "invalid BOOST_NUMERIC_UBLAS_CACHE_L2 arity");
 #endif
 
 #ifndef BOOST_NUMERIC_UBLAS_CACHE_L3
     inline static constexpr std::array default_l3_cache = { 64ul, 16ul, 16384ul };
 #else
     inline static constexpr std::array default_l3_cache = { BOOST_NUMERIC_UBLAS_CACHE_L3 };
-    static_assert(default_l3_cache.size() == 3ul, "invalid BOOST_NUMERIC_UBLAS_CACHE_L1 arity");
+    static_assert(default_l3_cache.size() == 3ul, "invalid BOOST_NUMERIC_UBLAS_CACHE_L3 arity");
 #endif
 
 } // namespace boost::numeric::ublas::detail

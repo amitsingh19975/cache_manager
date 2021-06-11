@@ -4,6 +4,7 @@
 #include "os/config.hpp"
 #include <concepts>
 #include <type_traits>
+#include <optional>
 
 namespace boost::numeric::ublas{
     
@@ -23,18 +24,18 @@ namespace boost::numeric::ublas{
         typename T::size_type;
         typename T::const_reference;
         typename T::const_iterator;
-        {m[0]};
-        {m.at(0)};
-        {m.begin()};
-        {m.end()};
-        {T::l1()};
-        {T::l2()};
-        {T::l3()};
+        {m[0]} -> std::same_as<typename T::const_reference>;
+        {m.at(0)} -> std::same_as<typename T::const_reference>;
+        {m.begin()} -> std::same_as<typename T::const_iterator>;
+        {m.end()} -> std::same_as<typename T::const_iterator>;
+        {T::l1()} -> std::same_as<typename T::const_reference>;
+        {T::l2()} -> std::same_as<typename T::const_reference>;
+        {T::l3()} -> std::same_as<typename T::const_reference>;
         {T::is_valid(0)} -> std::same_as<bool>;
-        {T::size(0)};
-        {T::line_size(0)};
-        {T::sets(0)};
-        {T::associativity(0)};
+        {T::size(0)} -> std::same_as<std::optional<typename T::size_type>>;
+        {T::line_size(0)} -> std::same_as<std::optional<typename T::size_type>>;
+        {T::sets(0)} -> std::same_as<std::optional<typename T::size_type>>;
+        {T::associativity(0)} -> std::same_as<std::optional<typename T::size_type>>;
     };
 
 
