@@ -19,11 +19,15 @@ namespace boost::numeric::ublas{
     template<typename T>
     concept CacheManager = requires(T m){
         requires std::is_same_v<T, cache_manager>;
+        
         typename T::value_type;
         typename T::base_type;
         typename T::size_type;
         typename T::const_reference;
         typename T::const_iterator;
+        
+        requires std::is_same_v<typename T::value_type, std::optional<cache_info>>;
+
         {m[0]} -> std::same_as<typename T::const_reference>;
         {m.at(0)} -> std::same_as<typename T::const_reference>;
         {m.begin()} -> std::same_as<typename T::const_iterator>;
