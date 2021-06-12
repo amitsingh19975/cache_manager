@@ -8,7 +8,7 @@
 
 namespace boost::numeric::ublas{
     
-    struct cache_manager;
+    struct cache_manager_t;
 
     struct cache_info{
         std::size_t line_size{};
@@ -16,32 +16,79 @@ namespace boost::numeric::ublas{
         std::size_t sets{};
     };
 
-    template<typename T>
-    concept CacheManager = requires(T m){
-        requires std::is_same_v<T, cache_manager>;
-        
-        typename T::value_type;
-        typename T::base_type;
-        typename T::size_type;
-        typename T::const_reference;
-        typename T::const_iterator;
-        
-        requires std::is_same_v<typename T::value_type, std::optional<cache_info>>;
+    constexpr auto make_cache_manager() noexcept -> cache_manager_t;
 
-        {m[0]} -> std::same_as<typename T::const_reference>;
-        {m.at(0)} -> std::same_as<typename T::const_reference>;
-        {m.begin()} -> std::same_as<typename T::const_iterator>;
-        {m.end()} -> std::same_as<typename T::const_iterator>;
-        {T::l1()} -> std::same_as<typename T::const_reference>;
-        {T::l2()} -> std::same_as<typename T::const_reference>;
-        {T::l3()} -> std::same_as<typename T::const_reference>;
-        {T::is_valid(0)} -> std::same_as<bool>;
-        {T::size(0)} -> std::same_as<std::optional<typename T::size_type>>;
-        {T::line_size(0)} -> std::same_as<std::optional<typename T::size_type>>;
-        {T::sets(0)} -> std::same_as<std::optional<typename T::size_type>>;
-        {T::associativity(0)} -> std::same_as<std::optional<typename T::size_type>>;
+    struct cache_manager_t{
+        using value_type = std::optional<cache_info>;
+        using base_type = std::array<value_type,3ul>;
+        using size_type = typename base_type::size_type;
+        using const_reference = typename base_type::const_reference;
+        using const_iterator = typename base_type::const_iterator;
+
+        explicit constexpr cache_manager_t(base_type data)
+            : m_data(data)
+        {}
+        
+        explicit constexpr cache_manager_t(value_type l1, value_type l2, value_type l3)
+            : m_data{l1, l2, l3}
+        {}
+
+        constexpr cache_manager_t(cache_manager_t const&) = default;
+        constexpr cache_manager_t(cache_manager_t &&) = default;
+        constexpr cache_manager_t& operator=(cache_manager_t const&) = default;
+        constexpr cache_manager_t& operator=(cache_manager_t &&) = default;
+        ~cache_manager_t() = default;
+
+        constexpr const_reference operator[](size_type k) const { return m_data[k]; }
+        constexpr const_reference at(size_type k) const { return m_data.at(k); }
+
+        constexpr const_iterator begin() const noexcept{ return m_data.begin(); }
+        constexpr const_iterator end() const noexcept{ return m_data.end(); }
+
+        constexpr const_reference l1() const noexcept{ return m_data[0ul]; }
+        constexpr const_reference l2() const noexcept{ return m_data[1ul]; }
+        constexpr const_reference l3() const noexcept{ return m_data[2ul]; }
+
+        constexpr auto is_valid(std::size_t k) const noexcept 
+            -> bool
+        {
+            return m_data[k].has_value();
+        }
+
+        constexpr auto size(size_type k) const
+            -> std::optional<size_type>
+        { 
+            if(!is_valid(k)) return std::nullopt;
+            auto const& cache = m_data[k];
+            return cache->sets * cache->line_size * cache->associativity;
+        }
+
+        constexpr auto line_size(size_type k) const
+            -> std::optional<size_type>
+        { 
+            if(!is_valid(k)) return std::nullopt;
+            return m_data[k]->line_size;
+        }
+
+        constexpr auto sets(size_type k) const
+            -> std::optional<size_type>
+        { 
+            if(!is_valid(k)) return std::nullopt;
+            return m_data[k]->sets;
+        }
+
+        constexpr auto associativity(size_type k) const
+            -> std::optional<size_type>
+        { 
+            if(!is_valid(k)) return std::nullopt;
+            return m_data[k]->associativity;
+        }
+
+    private:
+        base_type m_data;
     };
 
+    inline static cache_manager_t const cache_manager = make_cache_manager();
 
 } // namespace boost::numeric::ublas
 

@@ -20,11 +20,9 @@ std::ostream& operator<<(std::ostream& os, boost::numeric::ublas::cache_info con
 int main(){
     std::cout<<"Cache initialing...\n";
     
-    static_assert(boost::numeric::ublas::CacheManager<boost::numeric::ublas::cache_manager>);
-    
     std::cout<<"SIMD-Width: " << boost::numeric::ublas::detail::simd_width<<'\n';
     
-    boost::numeric::ublas::cache_manager m{};
+    auto m = boost::numeric::ublas::cache_manager;
     for(auto j = 1ul; auto const& l : m){
         std::cout<<"Level(" << j++ << ") => ";
         if(!l.has_value()) std::cout<<"None\n";

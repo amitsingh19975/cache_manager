@@ -81,72 +81,11 @@ namespace boost::numeric::ublas{
         }
 
     } // namespace detal
+
     
-
-    struct cache_manager{
-        using value_type = std::optional<cache_info>;
-        using base_type = std::array<value_type,3ul>;
-        using size_type = typename base_type::size_type;
-        using const_reference = typename base_type::const_reference;
-        using const_iterator = typename base_type::const_iterator;
-
-        constexpr cache_manager() = default;
-        constexpr cache_manager(cache_manager const&) = default;
-        constexpr cache_manager(cache_manager &&) = default;
-        constexpr cache_manager& operator=(cache_manager const&) = default;
-        constexpr cache_manager& operator=(cache_manager &&) = default;
-        ~cache_manager() = default;
-
-        constexpr const_reference operator[](size_type k) const { return m_data[k]; }
-        constexpr const_reference at(size_type k){ return m_data.at(k); }
-
-        constexpr const_iterator begin() const noexcept{ return m_data.begin(); }
-        constexpr const_iterator end() const noexcept{ return m_data.end(); }
-
-        constexpr static const_reference l1() noexcept{ return m_data[0ul]; }
-        constexpr static const_reference l2() noexcept{ return m_data[1ul]; }
-        constexpr static const_reference l3() noexcept{ return m_data[2ul]; }
-
-        constexpr static auto is_valid(std::size_t k) noexcept 
-            -> bool
-        {
-            return m_data[k].has_value();
-        }
-
-        constexpr static auto size(size_type k) 
-            -> std::optional<size_type>
-        { 
-            if(!is_valid(k)) return std::nullopt;
-            auto const& cache = m_data[k];
-            return cache->sets * cache->line_size * cache->associativity;
-        }
-
-        constexpr static auto line_size(size_type k) 
-            -> std::optional<size_type>
-        { 
-            if(!is_valid(k)) return std::nullopt;
-            return m_data[k]->line_size;
-        }
-
-        constexpr static auto sets(size_type k) 
-            -> std::optional<size_type>
-        { 
-            if(!is_valid(k)) return std::nullopt;
-            return m_data[k]->sets;
-        }
-
-        constexpr static auto associativity(size_type k) 
-            -> std::optional<size_type>
-        { 
-            if(!is_valid(k)) return std::nullopt;
-            return m_data[k]->associativity;
-        }
-
-    private:
-        static base_type const m_data;
-    };
-
-    cache_manager::base_type const cache_manager::m_data = {detail::get_level_one(), detail::get_level_two(), detail::get_level_three()};
+    constexpr auto make_cache_manager() noexcept -> cache_manager_t{
+        return cache_manager_t{detail::get_level_one(), detail::get_level_two(), detail::get_level_three()};
+    }    
 
 } // namespace boost::numeric::ublas
 
