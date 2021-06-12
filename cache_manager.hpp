@@ -104,7 +104,7 @@ namespace boost::numeric::ublas{
 
 } // namespace boost::numeric::ublas
 
-#ifndef BOOST_NUMERIC_UBLAS_DEFINE_NO_CACHE_MANAGER
+#ifndef BOOST_NUMERIC_UBLAS_NO_MAKE_CACHE_MANAGER
 #   if defined(BOOST_NUMERIC_UBLAS_MACOS)
         #include "os/mac/cache.hpp"
 #   elif defined(BOOST_NUMERIC_UBLAS_LINUX)

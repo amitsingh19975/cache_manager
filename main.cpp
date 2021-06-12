@@ -17,6 +17,14 @@ std::ostream& operator<<(std::ostream& os, boost::numeric::ublas::cache_info con
 
 }
 
+#ifdef BOOST_NUMERIC_UBLAS_NO_MAKE_CACHE_MANAGER
+namespace boost::numeric::ublas{
+    constexpr cache_manager_t make_cache_manager() noexcept{
+        return cache_manager_t{ cache_info{64,4,256}, cache_info{64,8,512} };
+    }
+}
+#endif
+
 int main(){
     std::cout<<"Cache initialing...\n";
     
@@ -26,7 +34,10 @@ int main(){
     auto m = boost::numeric::ublas::cache_manager;
     for(auto j = 1ul; auto const& l : m){
         std::cout<<"Level(" << j++ << ") => ";
-        if(!l.has_value()) std::cout<<"None\n";
+        if(!l.has_value()) {
+            std::cout<<"None\n";
+            continue;
+        }
         std::cout<<*l<<'\n';
     }
     return 0;
