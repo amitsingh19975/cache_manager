@@ -76,7 +76,7 @@ namespace boost::numeric::ublas::detail{
 
 #else
     inline static constexpr std::array default_l1_cache = { BOOST_NUMERIC_UBLAS_CACHE_L1 };
-    static_assert(default_l1_cache.size() == 3ul && std::is_integral_v<decltype(default_l1_cache)::value_type>, "invalid BOOST_NUMERIC_UBLAS_CACHE_L1 arity");
+    static_assert(default_l1_cache.size() == 3ul, "invalid BOOST_NUMERIC_UBLAS_CACHE_L1 arity");
 #endif
     
 
