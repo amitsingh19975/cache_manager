@@ -16,6 +16,17 @@ namespace boost::numeric::ublas{
         std::size_t sets{};
     };
 
+    /**
+     * This function needs to be implemented by the user if
+     * Operating System is not found. I choose this approach
+     * because the function body can be defered but the object
+     * body needs to defined before it could be used. Therefore,
+     * if the OS is not found then the user has to define the body
+     * before including the headers, but functions does not follow
+     * this constraint. Other solution could be using templates, which
+     * could be used as lazy evaluation, but it always requires the
+     * cache manager to be a template parameter.
+     */
     constexpr auto make_cache_manager() noexcept -> cache_manager_t;
 
     struct cache_manager_t{
