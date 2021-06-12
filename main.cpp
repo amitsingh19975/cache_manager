@@ -17,6 +17,19 @@ std::ostream& operator<<(std::ostream& os, boost::numeric::ublas::cache_info con
 
 }
 
+void normalize_size(std::ostream& os, std::size_t s) noexcept{
+    auto n = (s >> 10);
+    if(n == 0ul){
+        os << s << "B";
+    }
+    
+    s = n;
+    n >>= 10;
+
+    if(n == 0ul) os << s << "KiB";
+    else os << n << "MiB";
+}
+
 #ifdef BOOST_NUMERIC_UBLAS_NO_MAKE_CACHE_MANAGER
 namespace boost::numeric::ublas{
     constexpr cache_manager_t make_cache_manager() noexcept{
@@ -32,13 +45,15 @@ int main(){
     std::cout<<"Register(SIMD) Width[Double]: " << boost::numeric::ublas::detail::simd_register_width<double><<'\n';
     
     auto m = boost::numeric::ublas::cache_manager;
-    for(auto j = 1ul; auto const& l : m){
+    for(std::size_t j = 1ul, i = 0ul; auto const& l : m){
         std::cout<<"Level(" << j++ << ") => ";
         if(!l.has_value()) {
             std::cout<<"None\n";
             continue;
         }
-        std::cout<<*l<<'\n';
+        std::cout<<*l<<", Size: ";
+        normalize_size(std::cout, m.size(i++).value());
+        std::cout<<'\n';
     }
     return 0;
 }
