@@ -40,7 +40,7 @@ namespace boost::numeric::ublas{
             : m_data(data)
         {}
         
-        explicit constexpr cache_manager_t(value_type l1, value_type l2, value_type l3)
+        explicit constexpr cache_manager_t(value_type l1 = std::nullopt, value_type l2 = std::nullopt, value_type l3 = std::nullopt)
             : m_data{l1, l2, l3}
         {}
 

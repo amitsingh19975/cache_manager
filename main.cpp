@@ -20,7 +20,8 @@ std::ostream& operator<<(std::ostream& os, boost::numeric::ublas::cache_info con
 int main(){
     std::cout<<"Cache initialing...\n";
     
-    std::cout<<"SIMD-Width: " << boost::numeric::ublas::detail::simd_width<<'\n';
+    std::cout<<"Register(SIMD) Width[Float]: " << boost::numeric::ublas::detail::simd_register_width<float><<'\n';
+    std::cout<<"Register(SIMD) Width[Double]: " << boost::numeric::ublas::detail::simd_register_width<double><<'\n';
     
     auto m = boost::numeric::ublas::cache_manager;
     for(auto j = 1ul; auto const& l : m){

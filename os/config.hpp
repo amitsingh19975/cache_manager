@@ -26,31 +26,38 @@
 #endif
 
 #ifndef BOOST_HW_SIMD_AVAILABLE
-#   inline static constexpr std::size_t simd_width = 1ul;
+#   define BOOST_NUMERIC_UBLAS_SIMD_WIDTH 1ul
 #endif
-
-namespace boost::numeric::ublas::detail{
 
 #if BOOST_HW_SIMD_X86 > BOOST_HW_SIMD_X86_SSE_VERSION
 #   if BOOST_HW_SIMD_X86 > BOOST_HW_SIMD_X86_SSE4_2_VERSION
 #       if BOOST_HW_SIMD_X86 > BOOST_HW_SIMD_X86_AVX2_VERSION
-            inline static constexpr std::size_t simd_width = 512ul;
+#           define BOOST_NUMERIC_UBLAS_SIMD_WIDTH 512ul
 #       else
-            inline static constexpr std::size_t simd_width = 256ul;
+#           define BOOST_NUMERIC_UBLAS_SIMD_WIDTH 256ul
 #       endif
 
 #   else
-        inline static constexpr std::size_t simd_width = 128ul;
+#       define BOOST_NUMERIC_UBLAS_SIMD_WIDTH 128ul
 #   endif
 #else
-    inline static constexpr std::size_t simd_width = 64ul;
+#   define BOOST_NUMERIC_UBLAS_SIMD_WIDTH 64ul
 #endif
 
 #ifdef __ARM_FEATURE_SVE_BITS
-    inline static constexpr std::size_t simd_width = __ARM_FEATURE_SVE_BITS;
+#   define BOOST_NUMERIC_UBLAS_SIMD_WIDTH __ARM_FEATURE_SVE_BITS
 #elif !defined(BOOST_NUMERIC_UBLAS_x86)
-    inline static constexpr std::size_t simd_width = 128ul;
+#   define BOOST_NUMERIC_UBLAS_SIMD_WIDTH 128ul
 #endif
+
+namespace boost::numeric::ublas::detail{
+
+    template<typename ValueType>
+        requires std::is_arithmetic_v<ValueType>
+    inline static constexpr std::size_t simd_register_width = std::min(
+        BOOST_NUMERIC_UBLAS_SIMD_WIDTH, 
+        (BOOST_NUMERIC_UBLAS_SIMD_WIDTH / (CHAR_BIT * sizeof(ValueType)))
+    );
 
 /**
  * Format to provide a default level 'x' cache:
@@ -99,6 +106,6 @@ namespace boost::numeric::ublas::detail{
 
 } // namespace boost::numeric::ublas::detail
 
-
+#undef BOOST_NUMERIC_UBLAS_SIMD_WIDTH
 
 #endif // BOOST_NUMERIC_UBLAS_OS_CONFIG_HPP
