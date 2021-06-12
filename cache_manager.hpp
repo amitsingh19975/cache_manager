@@ -98,7 +98,8 @@ namespace boost::numeric::ublas{
     private:
         base_type m_data;
     };
-
+    
+    // It avoids expensive system calls for every object construction.
     inline static cache_manager_t const cache_manager = make_cache_manager();
 
 } // namespace boost::numeric::ublas
